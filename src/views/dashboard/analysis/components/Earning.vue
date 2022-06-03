@@ -1,31 +1,27 @@
 <template>
-  <PageWrapper title="详情组件示例">
-    <Description
-      title="基础示例"
-      :collapseOptions="{ canExpand: true, helpMessage: 'help me' }"
-      :column="3"
-      :data="mockData"
-      :schema="schema"
-    />
-
-    <Description
-      class="mt-4"
-      title="垂直示例"
-      layout="vertical"
-      :collapseOptions="{ canExpand: true, helpMessage: 'help me' }"
-      :column="2"
-      :data="mockData"
-      :schema="schema"
-    />
-
-    <Description @register="register" class="mt-4" />
-    <Description @register="register1" class="mt-4" />
-  </PageWrapper>
+  <Description
+    :title="title"
+    :collapseOptions="{ canExpand: true }"
+    :labelStyle="{ width: '300px' }"
+    :column="1"
+    :data="mockData"
+    :schema="schema"
+    :useCollapse="true"
+    class="mt-4"
+  >
+    <template #action>
+      <div class="action">
+        <a-button class="ml-4" type="link" size="small">
+          <Icon icon="ant-design:edit-outlined" />编辑</a-button
+        >
+      </div>
+    </template>
+  </Description>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { Description, DescItem, useDescription } from '/@/components/Description/index';
-  import { PageWrapper } from '/@/components/Page';
+  import { Icon } from '/@/components/Icon';
 
   const mockData: Recordable = {
     username: 'test',
@@ -41,45 +37,45 @@
   const schema: DescItem[] = [
     {
       field: 'username',
-      label: '用户名',
+      label: '即将拨款',
     },
     {
       field: 'nickName',
-      label: '昵称',
-      render: (curVal, data) => {
-        return `${data.username}-${curVal}`;
-      },
+      label: '已完成拨款-本轮',
     },
     {
       field: 'phone',
-      label: '联系电话',
-    },
-    {
-      field: 'email',
-      label: '邮箱',
-    },
-    {
-      field: 'addr',
-      label: '地址',
+      label: '已完成拨款-上一轮',
     },
   ];
   export default defineComponent({
-    components: { Description, PageWrapper },
+    components: { Description, Icon },
+    props: {
+      title: {
+        type: String,
+        default: '',
+      },
+    },
     setup() {
       const [register] = useDescription({
         title: 'useDescription',
         data: mockData,
         schema: schema,
       });
-
       const [register1] = useDescription({
         title: '无边框',
         bordered: false,
         data: mockData,
         schema: schema,
       });
-
       return { mockData, schema, register, register1 };
     },
   });
 </script>
+<style lang="less" scoped>
+  .action {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+  }
+</style>
